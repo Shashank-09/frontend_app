@@ -9,23 +9,23 @@ const GenderFilter = ({ handleGenderChange }) => {
       ? selectedGenders.filter((gender) => gender !== selectedGender)
       : [...selectedGenders, selectedGender];
     setSelectedGenders(updatedGenders);
-    handleGenderChange(updatedGenders); // Pass the selected genders to parent component
+    handleGenderChange(updatedGenders); 
   };
 
   return (
-    <div>
-      <h3>Gender:</h3>
-      <label>
-        <input type="checkbox" value="Male" onChange={onGenderChange} />
-        Male
-      </label>
-      <h3>Female:</h3>
-      <label>
-        <input type="checkbox" value="Female" onChange={onGenderChange} />
-        Female
-      </label>
-     
-    </div>
+    <div className="genderContainer">
+  <h3>Gender:</h3>
+  <div className="genderCheckboxes">
+    <label>
+      <input type="checkbox" value="Male" onChange={onGenderChange} />
+      Male
+    </label>
+    <label>
+      <input type="checkbox" value="Female" onChange={onGenderChange} />
+      Female
+    </label>
+  </div>
+</div>
   );
 };
 

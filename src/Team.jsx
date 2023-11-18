@@ -9,7 +9,9 @@ const Team = ({ selectedUsers, removeFromTeam }) => {
         {selectedUsers.map((user, ind) => (
           <div className="user-card" key={ind}>
             <div className="user-info">
-              <p>{user.first_name} {user.last_name}</p>
+              <p>Name: {user.first_name} {user.last_name}</p>
+              <p>Domain: {user.domain}</p>
+              <p>{user.available}</p>
               <button onClick={() => removeFromTeam(user)}>Remove</button>
             </div>
           </div>

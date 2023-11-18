@@ -5,13 +5,17 @@ import Search from "./Search";
 import './App.css';
 import DomainFilter from "./DomainFilter";
 import Team from "./Team";
+import GenderFilter from "./GenderFilter";
+import AvailabilityFilter from "./AvailabilityFilte";
 
 function App() {
   const [users, setUsers] = useState(JsonData.slice(0, 1000));
   const [pageNumber, setPageNumber] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedDomains, setSelectedDomains] = useState([]); 
-  const [selectedUsers, setSelectedUsers] = useState([]); 
+  const [selectedDomains, setSelectedDomains] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedGenders, setSelectedGenders] = useState([]);
+  const [selectedAvailabilities, setSelectedAvailabilities] = useState([])
 
   const usersPerPage = 20;
   const pagesVisited = pageNumber * usersPerPage;
@@ -24,10 +28,17 @@ function App() {
         user.first_name.toLowerCase().includes(query.toLowerCase()) ||
         user.last_name.toLowerCase().includes(query.toLowerCase())
     );
-    setUsers(filteredUsers.slice(0, 1000)); 
+    setUsers(filteredUsers.slice(0, 1000));
   };
 
-  
+  const handleGenderChange = (selectedGenders) => {
+    setSelectedGenders(selectedGenders);
+    // Perform filtering based on selected genders
+    const filteredUsers = JsonData.filter(user => selectedGenders.includes(user.gender));
+    setUsers(filteredUsers);
+  };
+
+
   const handleDomainChange = (selectedDomains) => {
     setSelectedDomains(selectedDomains);
     // Perform filtering based on selected domains
@@ -35,9 +46,9 @@ function App() {
     setUsers(filteredUsers);
   };
 
-  
+
   const addToTeam = (user) => {
-   
+
     const isUnique = !selectedUsers.some(
       (selectedUser) =>
         selectedUser.domain === user.domain && selectedUser.available === user.available
@@ -46,12 +57,13 @@ function App() {
     if (isUnique) {
       setSelectedUsers([...selectedUsers, user]);
     } else {
-      
+
       alert("This user cannot be added to the team. Domain and availability must be unique.");
     }
   };
 
-  
+
+
   const removeFromTeam = (userToRemove) => {
     const updatedTeam = selectedUsers.filter(
       (user) => !(user.domain === userToRemove.domain && user.available === userToRemove.available)
@@ -59,7 +71,14 @@ function App() {
     setSelectedUsers(updatedTeam);
   };
 
-  
+  const handleAvailabilityChange = (availabilities) => {
+    setSelectedAvailabilities(availabilities);
+    console.log("Selected availabilities:", availabilities);
+  };
+
+
+
+
 
   const displayUsers = users
     .slice(pagesVisited, pagesVisited + usersPerPage)
@@ -71,13 +90,14 @@ function App() {
           <h3>LastName: {user.last_name}</h3>
           <h3>Email: {user.email}</h3>
           <h3>Domain: {user.domain}</h3>
+          <h3>Gender: {user.gender}</h3>
           <h3>{user.available}</h3>
           <button onClick={() => addToTeam(user)}>Add to Team</button>
         </div>
       );
     });
 
-  
+
 
   const pageCount = Math.ceil(users.length / usersPerPage);
 
@@ -87,9 +107,22 @@ function App() {
 
   return (
     <>
-      <DomainFilter handleDomainChange={handleDomainChange} />
+      <div className="grid">
+  <div className="card">
+    <DomainFilter handleDomainChange={handleDomainChange} />
+  </div>
+  <div className="card">
+    <GenderFilter handleGenderChange={handleGenderChange} />
+  </div>
+  <div className="card">
+    <AvailabilityFilter handleAvailabilityChange={handleAvailabilityChange} />
+  </div>
+</div>
+
+
       <Search handleSearch={handleSearch} />
       <Team selectedUsers={selectedUsers} removeFromTeam={removeFromTeam} />
+
 
       <div className="App">
         <h2>Users</h2>
